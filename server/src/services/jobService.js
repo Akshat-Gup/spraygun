@@ -2,15 +2,25 @@ import OpenAI from 'openai'
 import nodemailer from 'nodemailer'
 import fs from 'fs/promises'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-})
+let openai = null
+
+// Initialize OpenAI only if API key is provided
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+  })
+}
 
 /**
  * Find relevant professionals for networking based on user's role and location
  */
 export async function findProfessionals({ role, location, projects, cvPath }) {
   try {
+    // If OpenAI is not configured, return sample data
+    if (!openai) {
+      console.log('OpenAI not configured, using sample data')
+      return generateSampleProfessionals(role, location)
+    }
     // Read CV content (simplified - in production, use a PDF parser)
     let cvContent = ''
     try {
@@ -132,6 +142,13 @@ export async function sendNetworkingEmails(professionals, userData) {
  */
 async function generateEmailContent(professional, userData) {
   try {
+    // If OpenAI is not configured, use template
+    if (!openai) {
+      return {
+        subject: `Connecting about ${userData.role} opportunities`,
+        body: `Hi ${professional.name},\n\nI hope this email finds you well. I'm currently exploring opportunities in ${userData.role} and came across your profile at ${professional.company}.\n\n${userData.projects ? `I've been working on: ${userData.projects}\n\n` : ''}I'd love to learn more about your experience in the field and would appreciate any insights you might have about opportunities in ${userData.location}.\n\nWould you be open to a brief call?\n\nBest regards`
+      }
+    }
     const prompt = `Generate a professional networking email for the following scenario:
 
 From: A job seeker looking for ${userData.role} positions in ${userData.location}

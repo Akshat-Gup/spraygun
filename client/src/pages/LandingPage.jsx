@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Environment } from '@react-three/drei'
+import { OrbitControls } from '@react-three/drei'
 import { useNavigate } from 'react-router-dom'
 import SprayBottle from '../components/SprayBottle'
 import SprayParticles from '../components/SprayParticles'
@@ -29,16 +29,19 @@ function LandingPage() {
       <Canvas
         camera={{ position: [0, 2, 8], fov: 50 }}
         shadows
+        gl={{ alpha: true, antialias: true }}
       >
-        <ambientLight intensity={0.5} />
+        <color attach="background" args={['#667eea']} />
+        <ambientLight intensity={0.6} />
         <directionalLight
           position={[10, 10, 5]}
-          intensity={1}
+          intensity={1.2}
           castShadow
           shadow-mapSize={[1024, 1024]}
         />
-        <pointLight position={[-10, 0, -5]} intensity={0.5} color="#FF6B9D" />
-        <pointLight position={[10, 0, -5]} intensity={0.5} color="#845EC2" />
+        <pointLight position={[-10, 0, -5]} intensity={0.8} color="#FF6B9D" />
+        <pointLight position={[10, 0, -5]} intensity={0.8} color="#845EC2" />
+        <hemisphereLight intensity={0.5} groundColor="#667eea" />
         
         <SprayBottle onClick={handleSprayClick} spraying={spraying} />
         <SprayParticles active={spraying} />
@@ -49,7 +52,6 @@ function LandingPage() {
           minPolarAngle={Math.PI / 3}
           maxPolarAngle={Math.PI / 2}
         />
-        <Environment preset="sunset" />
       </Canvas>
 
       {!showMenu && (
