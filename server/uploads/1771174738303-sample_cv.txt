@@ -1,0 +1,14 @@
+John Doe
+Software Engineer
+
+EXPERIENCE:
+- Senior Software Engineer at Tech Corp (2020-2023)
+- Software Developer at StartUp Inc (2018-2020)
+
+SKILLS:
+- React, Node.js, Python, Java
+- AWS, Docker, Kubernetes
+- Agile methodologies
+
+EDUCATION:
+- BS Computer Science, University of California
